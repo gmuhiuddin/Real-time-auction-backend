@@ -2,7 +2,7 @@ import express from 'express';
 import { collection, getDocs, where, query, doc, getDoc, updateDoc } from 'firebase/firestore';
 import schedule from 'node-schedule';
 import { db } from '../config/db.js';
-import { sendBiderEmail, sendProductOwnerEmail, sendProductOwneractivationEmail } from '../tasks/sendEmails.js';
+import { sendBiderEmail, sendProductOwnerEmail, sendProductOwneractivationEmail, sendProductOwnerEmailButNoBid } from '../tasks/sendEmails.js';
 
 const router = express.Router();
 
@@ -49,7 +49,8 @@ router.put('/deavtivateproduct', async (req, res) => {
 
             const bids = await getDocs(bidsQuery);
 
-            const bid = bids.docs[bids.docs.length - 1].data();
+            if(bids.docs.length){
+                const bid = bids.docs[bids.docs.length - 1].data();
 
             const productDoc = doc(db, "products", bid.productId);
 
@@ -68,6 +69,21 @@ router.put('/deavtivateproduct', async (req, res) => {
                 activated: false,
                 bidWinner: biderData.id
             });
+            }else{
+            const productDoc = doc(db, "products", productId);
+
+            const productData = await getDoc(productDoc);
+
+            const productOwnerDoc = doc(db, "users", productData?.data().uid);
+
+            const productOwnerData = await getDoc(productOwnerDoc);
+
+            await sendProductOwnerEmailButNoBid(productOwnerData.data().email, productData.data().title);
+
+            await updateDoc(productDoc, {
+                activated: false,
+            });
+            }
         });
 
         res.send({msg: "successfully"});

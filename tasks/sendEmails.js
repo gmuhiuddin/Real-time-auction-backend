@@ -69,4 +69,25 @@ const sendProductOwneractivationEmail = async (productOwnerEmail, productTitle, 
     });
 };
 
+const sendProductOwnerEmailButNoBid = async (productOwnerEmail, productTitle) => {
+    const transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 587,
+        auth: {
+            user: process.env.Smtp_User_Name,
+            pass: process.env.Smtp_Password,
+        },
+    });
+
+    await transporter.sendMail({
+        from: '"Aution-web-department" <aution.web.email>',
+        to: productOwnerEmail,
+        subject: "Product lived", // Subject line
+        //     text: `You login in this ip address ${ipAddress}. If not you, Please contact our customer support
+        // https://gmuhiuddin.website/support
+        //     `,
+        html: `<h1>Your product was not any bid ${productTitle}, Your product was deactivated</h1>`,
+    });
+};
+
 export { sendBiderEmail, sendProductOwnerEmail, sendProductOwneractivationEmail };
