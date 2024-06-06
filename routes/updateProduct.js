@@ -11,13 +11,35 @@ router.get('/', (req, res) => {
     res.send({ msg: "Successfully" });
 });
 
+router.put('/avtivateproduct', async (req, res) => {
+
+    const { body: { startingTime, productId } } = req;
+
+    schedule.scheduleJob(new Date(startingTime), async () => {
+
+        const productDoc = doc(db, "products", productId);
+        const productData = await getDoc(productDoc);
+
+        const productOwnerDoc = doc(db, "users", productData.data().uid);
+        const productOwnerData = await getDoc(productOwnerDoc);
+
+        await sendProductOwneractivationEmail(productOwnerData.data().email, productData.data().title, productData.data().price, productData.id);
+
+        await updateDoc(productDoc, {
+            activated: true,
+        });
+
+    });
+
+    res.send({ msg: "successfully" });
+});
+
 router.put('/deavtivateproduct', async (req, res) => {
 
     const { body: { expiryTime, productId } } = req;
 
-    schedule.scheduleJob(new Date(expiryTime), async () => {
+        schedule.scheduleJob(new Date(expiryTime), async () => {
 
-        try {
             const getLastBidCollection = collection(db, "bids");
 
             const bidsQuery = query(
@@ -46,40 +68,9 @@ router.put('/deavtivateproduct', async (req, res) => {
                 activated: false,
                 bidWinner: biderData.id
             });
-
-            res.send({ msg: "successfully" });
-        } catch (err) {
-            res.send({ msg: err.message })
-        }
-
-    });
-});
-
-router.put('/avtivateproduct', async (req, res) => {
-
-    const { body: { startingTime, productId } } = req;
-
-    schedule.scheduleJob(new Date(startingTime), async () => {
-
-    try {
-        const productDoc = doc(db, "products", productId);
-        const productData = await getDoc(productDoc);
-
-        const productOwnerDoc = doc(db, "users", productData.data().uid);
-        const productOwnerData = await getDoc(productOwnerDoc);
-
-        await sendProductOwneractivationEmail(productOwnerData.data().email, productData.data().title, productData.data().price, productData.id);
-
-        await updateDoc(productDoc, {
-            activated: true,
         });
 
-        res.send({ msg: "successfully" });
-    } catch (err) {
-        res.send({ msg: res.message });
-    }
-    });
-
+        res.send({msg: "successfully"});
 });
 
 export default router;
