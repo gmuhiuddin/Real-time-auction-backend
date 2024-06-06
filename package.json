@@ -1,0 +1,23 @@
+{
+  "name": "real-time-authion-backend",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "firebase": "^10.12.2",
+    "node-schedule": "^2.1.1",
+    "nodemailer": "^6.9.13",
+    "nodemon": "^3.1.2"
+  }
+}
