@@ -61,7 +61,7 @@ const sendProductOwneractivationEmail = async (productOwnerEmail, productTitle, 
     await transporter.sendMail({
         from: '"Aution-web-department" <aution.web.email>',
         to: productOwnerEmail,
-        subject: "Product lived", // Subject line
+        subject: "Product deativation", // Subject line
         //     text: `You login in this ip address ${ipAddress}. If not you, Please contact our customer support
         // https://gmuhiuddin.website/support
         //     `,
