@@ -38,19 +38,19 @@ router.put('/deavtivateproduct', async (req, res) => {
 
     const { body: { expiryTime, productId } } = req;
 
-        schedule.scheduleJob(new Date(expiryTime), async () => {
+    schedule.scheduleJob(new Date(expiryTime), async () => {
 
-            const getLastBidCollection = collection(db, "bids");
+        const getLastBidCollection = collection(db, "bids");
 
-            const bidsQuery = query(
-                getLastBidCollection,
-                where("productId", "==", productId)
-            );
+        const bidsQuery = query(
+            getLastBidCollection,
+            where("productId", "==", productId)
+        );
 
-            const bids = await getDocs(bidsQuery);
+        const bids = await getDocs(bidsQuery);
 
-            if(bids.docs.length){
-                const bid = bids.docs[bids.docs.length - 1].data();
+        if (bids.docs.length) {
+            const bid = bids.docs[bids.docs.length - 1].data();
 
             const productDoc = doc(db, "products", bid.productId);
 
@@ -69,7 +69,7 @@ router.put('/deavtivateproduct', async (req, res) => {
                 activated: false,
                 bidWinner: biderData.id
             });
-            }else{
+        } else {
             const productDoc = doc(db, "products", productId);
 
             const productData = await getDoc(productDoc);
@@ -83,10 +83,10 @@ router.put('/deavtivateproduct', async (req, res) => {
             await updateDoc(productDoc, {
                 activated: false,
             });
-            }
-        });
+        }
+    });
 
-        res.send({msg: "successfully"});
+    res.send({ msg: "successfully" });
 });
 
 export default router;

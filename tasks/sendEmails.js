@@ -90,4 +90,4 @@ const sendProductOwnerEmailButNoBid = async (productOwnerEmail, productTitle) =>
     });
 };
 
-export { sendBiderEmail, sendProductOwnerEmail, sendProductOwneractivationEmail };
+export { sendBiderEmail, sendProductOwnerEmail, sendProductOwneractivationEmail, sendProductOwnerEmailButNoBid };
