@@ -8,7 +8,7 @@ const app = express();
 const port = process.env.PORT || 3001;
 
 dotenv.config();
-app.use(cors());
+app.use(cors({ origin: ['http://localhost:5173', "https://real-time-auction.vercel.app"] }));
 app.use(express.json());
 
 app.listen(port, () => {

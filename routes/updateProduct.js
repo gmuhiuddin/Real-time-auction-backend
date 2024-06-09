@@ -2,7 +2,7 @@ import express from 'express';
 import { collection, getDocs, where, query, doc, getDoc, updateDoc } from 'firebase/firestore';
 import schedule from 'node-schedule';
 import { db } from '../config/db.js';
-import { sendBiderEmail, sendProductOwnerEmail, sendProductOwneractivationEmail, sendProductOwnerEmailButNoBid } from '../tasks/sendEmails.js';
+import { sendBiderEmail, sendProductOwnerEmail, sendProductOwnerActivationEmail, sendProductOwnerEmailButNoBid } from '../tasks/sendEmails.js';
 
 const router = express.Router();
 
@@ -23,7 +23,7 @@ router.put('/avtivateproduct', async (req, res) => {
         const productOwnerDoc = doc(db, "users", productData.data().uid);
         const productOwnerData = await getDoc(productOwnerDoc);
 
-        await sendProductOwneractivationEmail(productOwnerData.data().email, productData.data().title, productData.data().price, productData.id);
+        await sendProductOwnerActivationEmail(productOwnerData.data().email, productData.data().title, productData.data().price, productData.id);
 
         await updateDoc(productDoc, {
             activated: true,
